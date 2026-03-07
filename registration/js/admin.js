@@ -10,7 +10,9 @@ import {
     collection, 
     getDocs,
     orderBy,
-    query
+    query,
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
 import { app } from "./firebase.js"; // Reuse initialized app
@@ -19,10 +21,23 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ─── ADMIN CONFIGURATION ───
-// Hardcoded list of approved admin emails
-const ADMIN_EMAILS = [
-    "dhamindhanker2010@gmail.com"
-];
+// We will fetch authorized admin emails from the "settings/admins" document in Firestore.
+// If the document doesn't exist yet, we fall back to the owner's email so you don't get locked out.
+const FALLBACK_ADMIN = "dhamindhankher2010@gmail.com";
+
+async function isUserAdmin(email) {
+    try {
+        const adminRef = doc(db, 'settings', 'admins');
+        const adminSnap = await getDoc(adminRef);
+        if (adminSnap.exists()) {
+            const emails = adminSnap.data().emails || [];
+            return emails.includes(email);
+        }
+    } catch (e) {
+        console.error("Error fetching admin config:", e);
+    }
+    return email === FALLBACK_ADMIN;
+}
 
 // Helper for event names
 const EVENT_NAMES = {
@@ -60,8 +75,10 @@ let registrationsData = [];
 // ─── AUTH STATE LOGIC ───
 onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // Logged in. Check if Admin.
-        if (ADMIN_EMAILS.includes(user.email)) {
+        showLoading("Verifying admin access...");
+        const isAdmin = await isUserAdmin(user.email);
+        
+        if (isAdmin) {
             // Authorized
             showLoading("Fetching registration data...");
             await fetchRegistrations();
@@ -83,8 +100,8 @@ onAuthStateChanged(auth, async (user) => {
 async function fetchRegistrations() {
     try {
         const regsRef = collection(db, "registrations");
-        // Sort by timestamp descending
-        const q = query(regsRef, orderBy('timestamp', 'desc'));
+        // Sort by registeredAt descending
+        const q = query(regsRef, orderBy('registeredAt', 'desc'));
         const querySnapshot = await getDocs(q);
         
         registrationsData = [];
@@ -118,9 +135,9 @@ function renderTable(dataArray) {
         
         // Formating Date
         let dateStr = '—';
-        if (reg.timestamp) {
+        if (reg.registeredAt) {
             // Firestore timestamp to Date
-            const date = reg.timestamp.toDate();
+            const date = reg.registeredAt.toDate();
             dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }
 
@@ -204,12 +221,17 @@ loginForm.addEventListener('submit', async (e) => {
     const email = document.getElementById('login-email').value.trim();
     const pass = document.getElementById('login-password').value;
 
-    if (!ADMIN_EMAILS.includes(email)) {
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Verifying...';
+
+    const isAdmin = await isUserAdmin(email);
+    if (!isAdmin) {
         loginError.textContent = "This email is not authorized for admin access.";
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Log In →';
         return;
     }
 
-    loginBtn.disabled = true;
     loginBtn.textContent = 'Logging in...';
 
     try {

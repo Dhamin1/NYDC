@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Registration — NYDC 2026</title>
     <meta name="description" content="Register your team for the National Youth Development Conference 2026">
-    <link rel="stylesheet" href="registration.css">
-    <link rel="stylesheet" href="selection.css">
+    <link rel="stylesheet" href="../css/registration.css">
+    <link rel="stylesheet" href="../css/selection.css">
 </head>
 <body>
 
@@ -105,7 +105,7 @@
       const storedEvent    = sessionStorage.getItem('nydc_event');
 
       if (!storedPersonal || !storedEvent) {
-        window.location.href = !storedPersonal ? 'registration.html' : 'event.html';
+        window.location.href = !storedPersonal ? '../registration.html' : 'event.html';
       }
 
       const personal  = JSON.parse(storedPersonal);
@@ -234,7 +234,7 @@
     </script>
 
     <!-- Firebase Integration -->
-    <script type="module" src="firebase.js"></script>
+    <script type="module" src="../js/firebase.js"></script>
 
 </body>
 </html>

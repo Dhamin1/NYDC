@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Events — NYDC 2026</title>
     <meta name="description" content="Choose your preferred events for the National Youth Development Conference 2026">
-    <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="../css/registration.css">
 </head>
 <body>
 
@@ -29,7 +29,7 @@
         <div class="registration-card">
 
             <!-- Back Link -->
-            <a href="registration.html" class="back-link" id="back-link">← Back</a>
+            <a href="../registration.html" class="back-link" id="back-link">← Back</a>
 
             <!-- Header -->
             <div class="card-header">
@@ -119,7 +119,7 @@
     <script>
       const stored = sessionStorage.getItem('nydc_registration');
       if (!stored) {
-        window.location.href = 'registration.html';
+        window.location.href = '../registration.html';
       } else {
         const personal = JSON.parse(stored);
         document.getElementById('user-greeting').innerHTML =

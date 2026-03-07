@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Committee — NYDC 2026</title>
     <meta name="description" content="Select your committees and portfolios for MUN">
-    <link rel="stylesheet" href="registration.css">
-    <link rel="stylesheet" href="mun.css">
+    <link rel="stylesheet" href="../css/registration.css">
+    <link rel="stylesheet" href="../css/mun.css">
 </head>
 <body>
 
@@ -59,10 +59,10 @@
       const storedPersonal = sessionStorage.getItem('nydc_registration');
       const storedEvent = sessionStorage.getItem('nydc_event');
       if (!storedPersonal || !storedEvent) {
-        window.location.href = 'registration.html';
+        window.location.href = '../registration.html';
       }
     </script>
 
-    <script src="mun.js"></script>
+    <script src="../js/mun.js"></script>
 </body>
 </html>

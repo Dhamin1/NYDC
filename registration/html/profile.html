@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile — NYDC 2026</title>
     <meta name="description" content="Manage your NYDC 2026 registration profile">
-    <link rel="stylesheet" href="registration.css">
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="../css/registration.css">
+    <link rel="stylesheet" href="../css/profile.css">
 </head>
 <body>
 
@@ -60,7 +60,7 @@
             </form>
             
             <p class="form-footer">
-                Don't have an account? <a href="registration.html">Register here</a>.
+                Don't have an account? <a href="../registration.html">Register here</a>.
             </p>
         </div>
 
@@ -132,7 +132,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyDBo7RP1PSFhva-Ni0pKScX0MlIuUEAmnE",
@@ -183,6 +183,26 @@
         // ── Auth Listener ──
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // Check if admin dynamically
+                let isAdmin = false;
+                try {
+                    const adminRef = doc(db, 'settings', 'admins');
+                    const adminSnap = await getDoc(adminRef);
+                    if (adminSnap.exists() && adminSnap.data().emails) {
+                        isAdmin = adminSnap.data().emails.includes(user.email);
+                    } else {
+                        // Fallback if document doesn't exist yet
+                        isAdmin = user.email === "dhamindhankher2010@gmail.com";
+                    }
+                } catch (e) {
+                    console.error("Admin check failed", e);
+                }
+
+                if (isAdmin) {
+                    window.location.href = 'admin.html';
+                    return;
+                }
+
                 // User logged in — fetch profile data
                 loadSec.style.display = 'block';
                 loginSec.style.display = 'none';

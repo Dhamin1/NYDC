@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register — NYDC 2026</title>
     <meta name="description" content="Register for the National Youth Development Conference 2026">
-    <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="css/registration.css">
 </head>
 <body>
 
@@ -229,7 +229,7 @@
             city:      document.getElementById('city').value.trim()
           };
           sessionStorage.setItem('nydc_registration', JSON.stringify(data));
-          window.location.href = 'event.html';
+          window.location.href = 'html/event.html';
         } catch (error) {
           console.error("Firebase Auth Error:", error);
           submitBtn.disabled = false;
