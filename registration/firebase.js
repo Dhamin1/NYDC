@@ -1,6 +1,7 @@
 // Firebase configuration & Firestore registration handler
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
 import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDBo7RP1PSFhva-Ni0pKScX0MlIuUEAmnE",
@@ -15,35 +16,71 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// ─── Handle registration form submission ───
-const form = document.getElementById('registration-form');
+// ─── Handle team-form submission (Page 3 — selection.html) ───
+const form = document.getElementById('team-form');
+if (!form) {
+  throw new Error('team-form not found – firebase.js should only run on selection.html');
+}
+
 const submitBtn = form.querySelector('.submit-btn');
+
+// Pull stored data from previous pages
+const storedPersonal = sessionStorage.getItem('nydc_registration');
+const storedEvent    = sessionStorage.getItem('nydc_event');
+const storedMun      = sessionStorage.getItem('nydc_mun_selection');
+
+if (!storedPersonal || !storedEvent) {
+  window.location.href = 'registration.html';
+}
+
+const personalData = JSON.parse(storedPersonal);
+const eventData    = JSON.parse(storedEvent);
+const munPortfolios = storedMun ? JSON.parse(storedMun) : null;
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // Disable button & show loading state
+  // Disable button & show loading
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting…';
 
-  // Gather selected events
-  const selectedEvents = [];
-  document.querySelectorAll('input[name="events"]:checked').forEach((cb) => {
-    selectedEvents.push(cb.value);
+  // Gather all team members from the cards
+  const memberCards = document.querySelectorAll('.member-card');
+  const teamMembers = [];
+
+  memberCards.forEach((card, i) => {
+    teamMembers.push({
+      firstName: card.querySelector(`input[name="member_first_${card.dataset.index}"]`).value.trim(),
+      lastName:  card.querySelector(`input[name="member_last_${card.dataset.index}"]`).value.trim(),
+      email:     card.querySelector(`input[name="member_email_${card.dataset.index}"]`).value.trim(),
+      phone:     card.querySelector(`input[name="member_phone_${card.dataset.index}"]`).value.trim(),
+      school:    card.querySelector(`input[name="member_school_${card.dataset.index}"]`).value.trim(),
+      role:      i === 0 ? 'leader' : 'member'
+    });
   });
 
-  // Build registration data object
+  // Build full registration data
   const registrationData = {
-    firstName:  document.getElementById('first-name').value.trim(),
-    lastName:   document.getElementById('last-name').value.trim(),
-    email:      document.getElementById('email').value.trim(),
-    phone:      document.getElementById('phone').value.trim(),
-    school:     document.getElementById('school').value.trim(),
-    grade:      document.getElementById('grade').value,
-    city:       document.getElementById('city').value.trim(),
-    events:     selectedEvents,
-    experience: document.getElementById('experience').value.trim(),
+    // Auth UID (set during registration)
+    uid:          personalData.uid || null,
+    // Leader / registrant info
+    firstName:    personalData.firstName,
+    lastName:     personalData.lastName,
+    email:        personalData.email,
+    phone:        personalData.phone,
+    school:       personalData.school,
+    grade:        personalData.grade,
+    city:         personalData.city,
+    // Event info
+    event:        eventData.event,
+    experience:   eventData.experience,
+    munPortfolios: munPortfolios,
+    // Team info
+    teamSize:     teamMembers.length,
+    teamMembers:  teamMembers,
+    // Metadata
     registeredAt: serverTimestamp()
   };
 
@@ -51,8 +88,14 @@ form.addEventListener('submit', async (e) => {
     const docRef = await addDoc(collection(db, 'registrations'), registrationData);
     console.log('Registration saved with ID:', docRef.id);
 
+    // Clear all sessionStorage
+    sessionStorage.removeItem('nydc_registration');
+    sessionStorage.removeItem('nydc_event');
+    sessionStorage.removeItem('nydc_mun_selection');
+
     // Show success
-    form.innerHTML = `
+    const card = document.querySelector('.registration-card');
+    card.innerHTML = `
       <div style="text-align:center; padding:40px 0;">
         <div style="width:60px;height:60px;border-radius:50%;background:rgba(139,26,26,0.2);border:2px solid #8b1a1a;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b1a1a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -63,7 +106,7 @@ form.addEventListener('submit', async (e) => {
           Registration <span style="color:#8b1a1a;">Confirmed</span>
         </h2>
         <p style="font-family:'Outfit',sans-serif;color:#9ca3af;font-size:0.9rem;line-height:1.6;">
-          Thank you, <strong style="color:#fff;">${registrationData.firstName}</strong>! We've received your registration.<br>
+          Thank you, <strong style="color:#fff;">${registrationData.firstName}</strong>! Your team of <strong style="color:#fff;">${registrationData.teamSize}</strong> has been registered.<br>
           You'll receive a confirmation email at <strong style="color:#fff;">${registrationData.email}</strong>.
         </p>
         <p style="font-family:'Outfit',sans-serif;color:#6b7280;font-size:0.75rem;margin-top:16px;letter-spacing:0.1em;text-transform:uppercase;">

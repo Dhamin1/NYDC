@@ -276,6 +276,79 @@ body {
   box-shadow: 0 0 0 3px rgba(139, 26, 26, 0.1);
 }
 
+/* ───── Password Fields ───── */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--text-dimmed);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s;
+}
+
+.password-toggle:hover {
+  color: #fff;
+}
+
+.password-strength {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.strength-text {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  width: 80px;
+  text-align: right;
+}
+
+.password-error {
+  color: #ef4444;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  margin-top: 6px;
+  min-height: 16px;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
 .form-group select {
   appearance: none;
   -webkit-appearance: none;
@@ -294,7 +367,7 @@ body {
 .events-label {
   display: block;
   font-family: var(--font-body);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -303,16 +376,14 @@ body {
 }
 
 .events-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  display: block;
 }
 
 .event-check {
-  position: relative;
+  margin-bottom: 15px;
 }
 
-.event-check input[type="checkbox"] {
+.event-check input[type="radio"] {
   position: absolute;
   opacity: 0;
   width: 0;
@@ -336,26 +407,35 @@ body {
   transition: all 0.3s ease;
 }
 
+.event-duration {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-dimmed);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .event-check label::before {
   content: '';
   width: 16px;
   height: 16px;
   border: 1.5px solid var(--input-border);
-  border-radius: 4px;
+  border-radius: 50%;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
-.event-check input[type="checkbox"]:checked + label {
+.event-check input[type="radio"]:checked + label {
   border-color: var(--accent);
   background: rgba(139, 26, 26, 0.1);
   color: #fff;
 }
 
-.event-check input[type="checkbox"]:checked + label::before {
+.event-check input[type="radio"]:checked + label::before {
   background: var(--accent);
   border-color: var(--accent);
-  box-shadow: inset 0 0 0 2px #000;
+  box-shadow: inset 0 0 0 3px #000;
 }
 
 /* ───── Submit Button ───── */
@@ -470,4 +550,45 @@ body {
     font-size: 8px;
     letter-spacing: 0.3em;
   }
+}
+
+/* ───── Back Link (Event Page) ───── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  margin-bottom: 24px;
+  transition: color 0.3s ease;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+/* ───── Greeting Text ───── */
+.greeting {
+  letter-spacing: 0.05em !important;
+  text-transform: none !important;
+  font-size: 0.9rem !important;
+}
+
+.greeting strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ───── Step Indicator ───── */
+.step-indicator {
+  text-align: center;
+  margin-top: 24px;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--text-dimmed);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
