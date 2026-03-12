@@ -251,6 +251,8 @@
                             <div class="team-member-tile">
                                 <div class="member-role">${port.committeeName}</div>
                                 <h4>${port.portfolioName}</h4>
+                                ${port.position ? `<p class="portfolio-pos-text">${port.position}</p>` : ''}
+                                ${port.party ? `<p class="portfolio-party-text">${port.party}</p>` : ''}
                             </div>
                         `;
                     });

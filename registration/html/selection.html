@@ -46,6 +46,84 @@
             <!-- Team Members Container -->
             <form id="team-form" action="#" method="POST">
 
+                <!-- IPL Team Selection (Conditional) -->
+                <div id="ipl-team-section" style="display: none;">
+                    <span class="events-label">Represent Your Franchise</span>
+                    <div class="ipl-grid">
+                        <!-- Mumbai Indians -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-mi" value="Mumbai Indians" required>
+                            <label for="ipl-mi">
+                                <span class="team-name">Mumbai Indians</span>
+                            </label>
+                        </div>
+                        <!-- Chennai Super Kings -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-csk" value="Chennai Super Kings">
+                            <label for="ipl-csk">
+                                <span class="team-name">Chennai Super Kings</span>
+                            </label>
+                        </div>
+                        <!-- RCB -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-rcb" value="Royal Challengers Bangalore">
+                            <label for="ipl-rcb">
+                                <span class="team-name">Royal Challengers Bangalore</span>
+                            </label>
+                        </div>
+                        <!-- KKR -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-kkr" value="Kolkata Knight Riders">
+                            <label for="ipl-kkr">
+                                <span class="team-name">Kolkata Knight Riders</span>
+                            </label>
+                        </div>
+                        <!-- DC -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-dc" value="Delhi Capitals">
+                            <label for="ipl-dc">
+                                <span class="team-name">Delhi Capitals</span>
+                            </label>
+                        </div>
+                        <!-- RR -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-rr" value="Rajasthan Royals">
+                            <label for="ipl-rr">
+                                <span class="team-name">Rajasthan Royals</span>
+                            </label>
+                        </div>
+                        <!-- PK -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-pk" value="Punjab Kings">
+                            <label for="ipl-pk">
+                                <span class="team-name">Punjab Kings</span>
+                            </label>
+                        </div>
+                        <!-- SRH -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-srh" value="Sunrisers Hyderabad">
+                            <label for="ipl-srh">
+                                <span class="team-name">Sunrisers Hyderabad</span>
+                            </label>
+                        </div>
+                        <!-- GT -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-gt" value="Gujarat Titans">
+                            <label for="ipl-gt">
+                                <span class="team-name">Gujarat Titans</span>
+                            </label>
+                        </div>
+                        <!-- LSG -->
+                        <div class="ipl-team-card">
+                            <input type="radio" name="ipl_team" id="ipl-lsg" value="Lucknow Super Giants">
+                            <label for="ipl-lsg">
+                                <span class="team-name">Lucknow Super Giants</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="divider" style="margin: 24px 0;"></div>
+                </div>
+
                 <!-- Member cards injected here -->
                 <div id="members-container"></div>
 
@@ -130,6 +208,12 @@
       document.getElementById('team-info').innerHTML = isSolo
         ? 'This is a <strong>solo event</strong> — confirm your details below'
         : 'You can add up to <strong>' + maxMembers + ' members</strong> to your team';
+
+      // ─── IPL Team Section Toggle ───
+      const iplSection = document.getElementById('ipl-team-section');
+      if (eventKey === 'ipl') {
+        iplSection.style.display = 'block';
+      }
 
       // ─── Member card template ───
       let memberCount = 0;

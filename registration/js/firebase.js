@@ -60,6 +60,13 @@ if (form) {
       });
     });
 
+    // IPL Team Selection
+    let iplTeam = null;
+    if (eventData.event === 'ipl') {
+      const selectedIpl = form.querySelector('input[name="ipl_team"]:checked');
+      iplTeam = selectedIpl ? selectedIpl.value : null;
+    }
+
     // Build full registration data
     const registrationData = {
       // Auth UID (set during registration)
@@ -76,6 +83,7 @@ if (form) {
       event:        eventData.event,
       experience:   eventData.experience,
       munPortfolios: munPortfolios,
+      iplTeam:      iplTeam,
       // Team info
       teamSize:     teamMembers.length,
       teamMembers:  teamMembers,
