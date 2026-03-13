@@ -18,6 +18,11 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const auth = getAuth(app);
 
+// ─── Initialize EmailJS ───
+if (typeof emailjs !== 'undefined') {
+  emailjs.init({ publicKey: 'Vvw-ypTsbb2QHoiiX' });
+}
+
 // ─── Handle team-form submission (Page 3 — selection.html) ───
 const form = document.getElementById('team-form');
 
@@ -95,6 +100,40 @@ if (form) {
       const docRef = await addDoc(collection(db, 'registrations'), registrationData);
       console.log('Registration saved with ID:', docRef.id);
 
+      // ─── Send confirmation email via EmailJS ───
+      if (typeof emailjs !== 'undefined') {
+        const EVENT_NAMES = {
+          mun: 'Model United Nations', moot_court: 'Moot Court',
+          hackathon: 'Hackathon', debate: 'Conventional Debate',
+          spark_tank: 'Spark Tank', marketing: 'Marketing',
+          paper_trading: 'Paper Trading', film_making: 'Film Making',
+          Navras: 'Navras', poetry: 'Poetry',
+          raag_jaam: 'Raag Jaam', ipl: 'IPL'
+        };
+
+        const teamList = teamMembers.map((m, i) =>
+          `${i + 1}. ${m.firstName} ${m.lastName} (${m.email})`
+        ).join('\n');
+
+        const emailParams = {
+          to_name:          registrationData.firstName + ' ' + registrationData.lastName,
+          to_email:         registrationData.email,
+          event_name:       EVENT_NAMES[registrationData.event] || registrationData.event,
+          team_size:        registrationData.teamSize,
+          team_members:     teamList,
+          registration_id:  docRef.id,
+          school:           registrationData.school,
+          city:             registrationData.city
+        };
+
+        try {
+          await emailjs.send('service_1fxd5y7', 'template_09rbyci', emailParams);
+          console.log('Confirmation email sent successfully');
+        } catch (emailErr) {
+          console.warn('EmailJS failed (registration still saved):', emailErr);
+        }
+      }
+
       // Clear all sessionStorage
       sessionStorage.removeItem('nydc_registration');
       sessionStorage.removeItem('nydc_event');
@@ -114,7 +153,7 @@ if (form) {
           </h2>
           <p style="font-family:'Outfit',sans-serif;color:#9ca3af;font-size:0.9rem;line-height:1.6;">
             Thank you, <strong style="color:#fff;">${registrationData.firstName}</strong>! Your team of <strong style="color:#fff;">${registrationData.teamSize}</strong> has been registered.<br>
-            You'll receive a confirmation email at <strong style="color:#fff;">${registrationData.email}</strong>.
+            A confirmation email has been sent to <strong style="color:#fff;">${registrationData.email}</strong>.
           </p>
           <p style="font-family:'Outfit',sans-serif;color:#6b7280;font-size:0.75rem;margin-top:16px;letter-spacing:0.1em;text-transform:uppercase;">
             Registration ID: ${docRef.id}

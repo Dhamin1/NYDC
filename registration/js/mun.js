@@ -559,16 +559,35 @@ const container = document.getElementById('committees-container');
 const submitBtn = document.getElementById('mun-submit-btn');
 const countDisplay = document.getElementById('select-count');
 const statusBadge = document.querySelector('.selection-status');
+const searchInput = document.getElementById('portfolio-search');
+const searchCount = document.getElementById('search-count');
 
 // Track selected portfolios. Max 2.
 // Format: [{ committeeId, portfolioId, portfolioName }]
 let selectedPortfolios = [];
+let currentSearch = '';
 
 // ─── Render Committees ───
-function render() {
+function render(searchQuery = '') {
     container.innerHTML = '';
+    const query = searchQuery.trim().toLowerCase();
+    let totalMatches = 0;
 
     COMMITTEES.forEach(com => {
+        // Filter portfolios by search query
+        const filteredPortfolios = query
+            ? com.portfolios.filter(port => {
+                const searchable = [port.name, port.position, port.party]
+                    .filter(Boolean).join(' ').toLowerCase();
+                return searchable.includes(query);
+              })
+            : com.portfolios;
+
+        // Skip committee entirely if no matches during search
+        if (query && filteredPortfolios.length === 0) return;
+
+        totalMatches += filteredPortfolios.length;
+
         const group = document.createElement('div');
         group.className = 'committee-group';
         group.id = `group-${com.id}`;
@@ -579,12 +598,18 @@ function render() {
             group.classList.add('has-selection');
         }
 
+        // Auto-expand when searching
+        if (query) {
+            group.classList.add('expanded');
+        }
+
         // Header
         const header = document.createElement('div');
         header.className = 'committee-header';
         header.innerHTML = `
             <div class="committee-title">
                 ${com.name}
+                ${query ? `<span class="search-match-count">${filteredPortfolios.length}</span>` : ''}
                 <span class="selected-badge">Selected</span>
             </div>
             <svg class="expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -606,7 +631,7 @@ function render() {
         const list = document.createElement('div');
         list.className = 'portfolio-list';
 
-        com.portfolios.forEach(port => {
+        filteredPortfolios.forEach(port => {
             const isTaken = port.status === 'taken';
             const isChecked = selectedPortfolios.some(p => p.portfolioId === port.id);
             const item = document.createElement('div');
@@ -617,11 +642,14 @@ function render() {
             const statusClass = isTaken ? 'status-taken' : 'status-available';
             const statusText = isTaken ? 'Taken' : 'Available';
 
+            // Highlight matching text
+            const displayName = query ? highlightMatch(port.name, query) : port.name;
+
             const hasExtraInfo = port.position || port.party;
             const extraInfoHtml = hasExtraInfo ? `
                 <div class="portfolio-details">
-                    ${port.position ? `<span class="portfolio-position">${port.position}</span>` : ''}
-                    ${port.party ? `<span class="portfolio-party">${port.party}</span>` : ''}
+                    ${port.position ? `<span class="portfolio-position">${query ? highlightMatch(port.position, query) : port.position}</span>` : ''}
+                    ${port.party ? `<span class="portfolio-party">${query ? highlightMatch(port.party, query) : port.party}</span>` : ''}
                 </div>
             ` : '';
 
@@ -629,7 +657,7 @@ function render() {
                 <input type="checkbox" id="${idStr}" value="${port.id}" ${isChecked ? 'checked' : ''} ${isTaken ? 'disabled' : ''}>
                 <label for="${idStr}">
                     <div class="portfolio-info">
-                        <span class="portfolio-name">${port.name}</span>
+                        <span class="portfolio-name">${displayName}</span>
                         ${extraInfoHtml}
                     </div>
                     <span class="status-indicator ${statusClass}">${statusText}</span>
@@ -651,8 +679,41 @@ function render() {
         container.appendChild(group);
     });
 
+    // Show no-results message
+    if (query && totalMatches === 0) {
+        container.innerHTML = `<div class="no-results">No portfolios found for "<strong>${escapeHtml(searchQuery)}</strong>"</div>`;
+    }
+
+    // Update search count badge
+    if (query) {
+        searchCount.textContent = `${totalMatches} found`;
+        searchCount.classList.add('visible');
+    } else {
+        searchCount.classList.remove('visible');
+    }
+
     updateUIState();
 }
+
+// ─── Highlight matched text ───
+function highlightMatch(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+// ─── Search handler ───
+searchInput.addEventListener('input', (e) => {
+    currentSearch = e.target.value;
+    render(currentSearch);
+});
 
 // ─── Selection Logic ───
 function handleSelectionChange(isChecked, comId, comName, portId, portName, pos, party, inputEl) {
@@ -670,7 +731,7 @@ function handleSelectionChange(isChecked, comId, comName, portId, portName, pos,
         selectedPortfolios = [];
     }
 
-    render(); // Re-render to update badges and checked states
+    render(currentSearch); // Re-render to update badges and checked states
 }
 
 function updateUIState() {

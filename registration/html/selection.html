@@ -7,6 +7,7 @@
     <meta name="description" content="Register your team for the National Youth Development Conference 2026">
     <link rel="stylesheet" href="../css/registration.css">
     <link rel="stylesheet" href="../css/selection.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -51,72 +52,82 @@
                     <span class="events-label">Represent Your Franchise</span>
                     <div class="ipl-grid">
                         <!-- Mumbai Indians -->
-                        <div class="ipl-team-card">
-                            <input type="radio" name="ipl_team" id="ipl-mi" value="Mumbai Indians" required>
+                        <div class="ipl-team-card" style="--team-color: #004BA0;">
+                            <input type="radio" name="ipl_team" id="ipl-mi" value="Mumbai Indians">
                             <label for="ipl-mi">
+                                <span class="team-abbr">MI</span>
                                 <span class="team-name">Mumbai Indians</span>
                             </label>
                         </div>
                         <!-- Chennai Super Kings -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #F9CD05;">
                             <input type="radio" name="ipl_team" id="ipl-csk" value="Chennai Super Kings">
                             <label for="ipl-csk">
+                                <span class="team-abbr">CSK</span>
                                 <span class="team-name">Chennai Super Kings</span>
                             </label>
                         </div>
                         <!-- RCB -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #EC1C24;">
                             <input type="radio" name="ipl_team" id="ipl-rcb" value="Royal Challengers Bangalore">
                             <label for="ipl-rcb">
+                                <span class="team-abbr">RCB</span>
                                 <span class="team-name">Royal Challengers Bangalore</span>
                             </label>
                         </div>
                         <!-- KKR -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #3A225D;">
                             <input type="radio" name="ipl_team" id="ipl-kkr" value="Kolkata Knight Riders">
                             <label for="ipl-kkr">
+                                <span class="team-abbr">KKR</span>
                                 <span class="team-name">Kolkata Knight Riders</span>
                             </label>
                         </div>
                         <!-- DC -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #17479E;">
                             <input type="radio" name="ipl_team" id="ipl-dc" value="Delhi Capitals">
                             <label for="ipl-dc">
+                                <span class="team-abbr">DC</span>
                                 <span class="team-name">Delhi Capitals</span>
                             </label>
                         </div>
                         <!-- RR -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #EA1A85;">
                             <input type="radio" name="ipl_team" id="ipl-rr" value="Rajasthan Royals">
                             <label for="ipl-rr">
+                                <span class="team-abbr">RR</span>
                                 <span class="team-name">Rajasthan Royals</span>
                             </label>
                         </div>
                         <!-- PK -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #ED1B24;">
                             <input type="radio" name="ipl_team" id="ipl-pk" value="Punjab Kings">
                             <label for="ipl-pk">
+                                <span class="team-abbr">PBKS</span>
                                 <span class="team-name">Punjab Kings</span>
                             </label>
                         </div>
                         <!-- SRH -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #FF822A;">
                             <input type="radio" name="ipl_team" id="ipl-srh" value="Sunrisers Hyderabad">
                             <label for="ipl-srh">
+                                <span class="team-abbr">SRH</span>
                                 <span class="team-name">Sunrisers Hyderabad</span>
                             </label>
                         </div>
                         <!-- GT -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #1C1C2B;">
                             <input type="radio" name="ipl_team" id="ipl-gt" value="Gujarat Titans">
                             <label for="ipl-gt">
+                                <span class="team-abbr">GT</span>
                                 <span class="team-name">Gujarat Titans</span>
                             </label>
                         </div>
                         <!-- LSG -->
-                        <div class="ipl-team-card">
+                        <div class="ipl-team-card" style="--team-color: #A72056;">
                             <input type="radio" name="ipl_team" id="ipl-lsg" value="Lucknow Super Giants">
                             <label for="ipl-lsg">
+                                <span class="team-abbr">LSG</span>
                                 <span class="team-name">Lucknow Super Giants</span>
                             </label>
                         </div>
@@ -213,6 +224,8 @@
       const iplSection = document.getElementById('ipl-team-section');
       if (eventKey === 'ipl') {
         iplSection.style.display = 'block';
+        // Add required validation only when IPL section is visible
+        document.getElementById('ipl-mi').setAttribute('required', '');
       }
 
       // ─── Member card template ───

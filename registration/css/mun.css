@@ -27,6 +27,85 @@
   color: #22c55e;
 }
 
+/* ───── Portfolio Search ───── */
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.search-wrapper .search-icon {
+  position: absolute;
+  left: 16px;
+  color: var(--text-dimmed);
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.search-wrapper input:focus ~ .search-icon,
+.search-wrapper:focus-within .search-icon {
+  color: var(--accent);
+}
+
+#portfolio-search {
+  width: 100%;
+  padding: 14px 80px 14px 44px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+#portfolio-search::placeholder {
+  color: var(--text-dimmed);
+  font-weight: 300;
+}
+
+#portfolio-search:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(139, 26, 26, 0.15);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.search-count {
+  position: absolute;
+  right: 14px;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  color: var(--text-dimmed);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.search-count.visible {
+  opacity: 1;
+}
+
+/* Highlighted match text */
+.portfolio-name mark {
+  background: rgba(139, 26, 26, 0.35);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* No results message */
+.no-results {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--text-dimmed);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
 /* ───── Committees Grid ───── */
 .committees-container {
   display: flex;
@@ -86,6 +165,16 @@
 
 .committee-group.has-selection .selected-badge {
   display: inline-block;
+}
+
+.search-match-count {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  background: rgba(139, 26, 26, 0.25);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.05em;
 }
 
 .expand-icon {
