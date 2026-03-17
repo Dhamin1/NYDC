@@ -2137,6 +2137,31 @@
     --tw-tracking: 0.5em;
     letter-spacing: 0.5em;
   }
+  .contact-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: #6b7280;
+  text-decoration: none;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  }
+  .contact-phone svg {
+  opacity: 0.7;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+  }
+  .contact-phone:hover {
+  color: var(--red);
+  }
+  .contact-phone:hover svg {
+  opacity: 1;
+  }
+  
   .tracking-tight {
     --tw-tracking: var(--tracking-tight);
     letter-spacing: var(--tracking-tight);
