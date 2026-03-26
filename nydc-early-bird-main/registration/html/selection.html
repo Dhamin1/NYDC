@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/selection.css">
     <link rel="icon" href="../../NYDC-Final-main/images/nydc-logo.png" type="image/png" />
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script type="module" src="../js/ipl_status.js"></script>
 </head>
 <body>
 
@@ -260,6 +261,7 @@
         iplSection.style.display = 'block';
         // Add required validation only when IPL section is visible
         document.getElementById('ipl-mi').setAttribute('required', '');
+        // Mark taken IPL teams — handled by ipl_status.js (module)
       }
 
       // ─── Member card template ───

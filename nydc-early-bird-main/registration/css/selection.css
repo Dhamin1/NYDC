@@ -250,3 +250,47 @@
     max-width: 100%;
   }
 }
+
+/* ───── IPL Team: Taken State ───── */
+.ipl-team-card.ipl-team-taken {
+  pointer-events: none;
+  opacity: 0.42;
+}
+
+.ipl-team-card.ipl-team-taken label {
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.015);
+  border-color: rgba(255, 255, 255, 0.08);
+  filter: grayscale(0.6);
+}
+
+.ipl-team-card.ipl-team-taken label::before {
+  opacity: 0.15;
+}
+
+.ipl-team-card.ipl-team-taken .team-abbr {
+  color: var(--text-dimmed, #4b5563);
+  text-shadow: none;
+}
+
+.ipl-team-card.ipl-team-taken .team-name {
+  color: var(--text-dimmed, #4b5563);
+}
+
+/* Taken badge */
+.ipl-taken-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 4px;
+  padding: 2px 5px;
+  line-height: 1.4;
+}
